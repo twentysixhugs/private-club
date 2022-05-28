@@ -8,6 +8,8 @@ import 'dotenv/config';
 
 import indexRouter from './routes/index';
 
+import { ResponseError } from './types';
+
 const app = express();
 
 const mongoDB = String(process.env.DBCONNECTION);
@@ -15,11 +17,6 @@ mongoose.connect(mongoDB);
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-
-interface ResponseError {
-  status?: number;
-  message?: string;
-}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
