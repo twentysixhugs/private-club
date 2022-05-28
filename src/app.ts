@@ -7,6 +7,7 @@ import * as mongoose from 'mongoose';
 import 'dotenv/config';
 
 import indexRouter from './routes/index';
+import authRouter from './routes/auth';
 
 import { ResponseError } from './types';
 
@@ -29,6 +30,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/', authRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

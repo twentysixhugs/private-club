@@ -3,9 +3,9 @@ extends layout
 block content 
   form.form.form(action="" method="POST")
     if (errors)
-    div.form__errors
-      for error in errors
-        span.form__error error.message
+      div.form__errors
+        for error in errors
+          span.form__error error.message
     div.form__input-wrapper
       label.form__label(for="username") Username
       input.form__input(name="username" id="username")
