@@ -6,7 +6,7 @@ html
   body
     header.header
       nav.nav(class=`${user ? 'nav--authenticated' : ''}`) 
-        span Private Club
+        a.nav__title-link(href="/") Private Club
         if (!user)
           //- User is not logged in
           div.nav__links
