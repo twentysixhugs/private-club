@@ -4,4 +4,22 @@ html
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
+    header.header
+      nav.nav(class=`${user ? 'nav--authenticated' : ''}`) 
+        span Private Club
+        if (!user)
+          //- User is not logged in
+          div.nav__links
+            a.nav__link(href="log-in") Log in
+            a.nav__link(href="sign-up") Sign up
+        else
+          //- User is logged in
+          div.nav__links
+            if (isMember)
+              a.link(href="new-message") Create a message
+            a.nav__link(href="become-member") Become a member
+            a.nav__link(href="become-admin") Become an admin
+          div.nav__account
+            img.nav__user-avatar
+            a.nav__link(href="log-out") Log out
     block content
