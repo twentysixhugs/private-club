@@ -3,10 +3,18 @@ import * as express from 'express';
 import * as path from 'path';
 import * as cookieParser from 'cookie-parser';
 import * as logger from 'morgan';
+import * as mongoose from 'mongoose';
+import 'dotenv/config';
 
 import indexRouter from './routes/index';
 
 const app = express();
+
+const mongoDB = String(process.env.DBCONNECTION);
+mongoose.connect(mongoDB);
+
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 interface ResponseError {
   status?: number;
