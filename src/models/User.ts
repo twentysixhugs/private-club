@@ -1,8 +1,8 @@
 import { Schema, model, Types } from 'mongoose';
 
 export interface IUser {
-  username: String;
-  password: String;
+  username: string;
+  password: string;
   membership: 'none' | 'member' | 'admin';
   avatar: '1' | '2' | '3' | '4' | '5';
 }

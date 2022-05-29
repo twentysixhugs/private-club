@@ -1,7 +1,7 @@
 import { Schema, model, Types } from 'mongoose';
 import { DateTime } from 'luxon';
 export interface IMessage {
-  text: String;
+  text: string;
   user: Types.ObjectId;
   date: Date;
 }
