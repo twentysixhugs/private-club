@@ -46,27 +46,29 @@ app.use(
 
 passport.use(
   new LocalStrategy((username, password, done) => {
-    User.findOne({ username: username }).exec((err, user) => {
-      if (err) {
-        return done(err);
-      }
-
-      if (!user) {
-        return done(null, false);
-      }
-
-      bcrypt.compare(password, user.password, (err, result) => {
+    User.findOne({ usernameLowercased: username.toLowerCase() }).exec(
+      (err, user) => {
         if (err) {
           return done(err);
         }
 
-        if (result) {
-          return done(null, user);
-        } else {
-          return done(null, false, { message: 'Incorrect password' });
+        if (!user) {
+          return done(null, false);
         }
-      });
-    });
+
+        bcrypt.compare(password, user.password, (err, result) => {
+          if (err) {
+            return done(err);
+          }
+
+          if (result) {
+            return done(null, user);
+          } else {
+            return done(null, false, { message: 'Incorrect password' });
+          }
+        });
+      },
+    );
   }),
 );
 
