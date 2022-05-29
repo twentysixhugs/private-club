@@ -31,6 +31,7 @@ const signupPOST = (() => {
 
       const user = new User({
         username: req.body.username,
+        usernameLowercased: req.body.username.toLowerCase(),
         password: hashedPassword,
         membership: 'none',
         avatar: '1',
@@ -46,21 +47,23 @@ const signupPOST = (() => {
 
   const validationChain: ValidationChain[] = [
     body('username')
-      .isAlphanumeric()
-      .withMessage('Username must contain only letters and numbers')
+      .trim()
+      .escape()
       .not()
       .isEmpty()
       .withMessage('Username is required')
+      .isAlphanumeric()
+      .withMessage('Username must contain only letters and numbers')
       .custom(async (value) => {
-        let userCheck = await User.findOne({ username: value });
+        let userCheck = await User.findOne({
+          usernameLowercased: value.toLowerCase(),
+        });
 
         if (userCheck !== null) {
           return Promise.reject();
         }
       })
-      .withMessage('This username already exists')
-      .escape()
-      .trim(),
+      .withMessage('This username already exists'),
     body('password')
       .not()
       .isEmpty()
@@ -87,9 +90,49 @@ const loginGET: ControllerFn = (req, res, next) => {
 };
 
 const loginPOST = (() => {
-  const loginController: ControllerFn = (req, res, next) => {};
-  const validationChain: ValidationChain[] = [];
+  const loginController: ControllerFn = async (req, res, next) => {
+    const errors = await validationResult(req);
 
-  return [...validationChain, loginController];
+    if (!errors.isEmpty()) {
+      return res.render('auth-form', {
+        authAction: 'Log in',
+        errors: errors.mapped(),
+        username: req.body.username,
+        password: req.body.password,
+      });
+    }
+
+    next();
+  };
+
+  const validationChain: ValidationChain[] = [
+    body('username')
+      .trim()
+      .escape()
+      .not()
+      .isEmpty()
+      .withMessage('Username is required')
+      .custom(async (value) => {
+        let userCheck = User.findOne({
+          usernameLowercased: value.toLowerCase(),
+        });
+
+        if (!userCheck) {
+          // if the user is not found
+          return Promise.reject();
+        }
+      })
+      .withMessage('User not found'),
+    body('password').not().isEmpty().withMessage('Password is required'),
+  ];
+
+  return [
+    ...validationChain,
+    loginController,
+    passport.authenticate('local', {
+      failureRedirect: '/log-in',
+      successRedirect: '/',
+    }),
+  ];
 })();
 export { signupGET, loginGET, signupPOST, loginPOST };

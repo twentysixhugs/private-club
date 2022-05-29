@@ -2,6 +2,7 @@ import { Schema, model, Types } from 'mongoose';
 
 export interface IUser {
   username: string;
+  usernameLowercased: string;
   password: string;
   membership: 'none' | 'member' | 'admin';
   avatar: '1' | '2' | '3' | '4' | '5';
@@ -9,6 +10,10 @@ export interface IUser {
 
 const userSchema = new Schema<IUser>({
   username: {
+    type: String,
+    required: true,
+  },
+  usernameLowercased: {
     type: String,
     required: true,
   },
