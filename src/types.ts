@@ -17,3 +17,7 @@ export type AsyncFunctionCallback = (
 ) => void;
 
 export type ExpressUser = Express.User & { id: string };
+
+export type ExpressSession = Express.Request['session'] & {
+  messages: string[] | undefined | null;
+};

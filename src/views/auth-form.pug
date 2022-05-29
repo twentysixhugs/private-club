@@ -1,11 +1,13 @@
 extends layout 
 
 block content 
-  form.form.form(action="" method="POST")
+  form.form(action="" method="POST")
     if (errors)
       div.form__errors
         for error in errors
-          span.form__error=error.msg
+          span.form__error= error.msg
+    if (incorrectPasswordMsg)
+        span.form__error= incorrectPasswordMsg
     div.form__input-wrapper
       label.form__label(for="username") Username
       input.form__input(type="text" name="username" id="username" value=`${username ? username : ""}`)

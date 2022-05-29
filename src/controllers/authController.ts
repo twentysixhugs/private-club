@@ -1,4 +1,4 @@
-import { ControllerFn } from 'src/types';
+import { ControllerFn, ExpressSession } from 'src/types';
 import User from '../models/User';
 import * as passport from 'passport';
 import * as bcrypt from 'bcrypt';
@@ -86,11 +86,19 @@ const signupPOST = (() => {
 })();
 
 const loginGET: ControllerFn = (req, res, next) => {
-  res.render('auth-form', { authAction: 'Log in', title: 'Log in' });
+  res.render('auth-form', {
+    authAction: 'Log in',
+    title: 'Log in',
+    incorrectPasswordMsg: (req.session as ExpressSession).messages?.[0],
+  });
 };
 
 const loginPOST = (() => {
   const loginController: ControllerFn = async (req, res, next) => {
+    (req.session as ExpressSession).messages = undefined;
+
+    console.log((req.session as ExpressSession).messages);
+
     const errors = await validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -131,6 +139,7 @@ const loginPOST = (() => {
     loginController,
     passport.authenticate('local', {
       failureRedirect: '/log-in',
+      failureMessage: true,
       successRedirect: '/',
     }),
   ];
