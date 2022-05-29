@@ -21,5 +21,6 @@ html
             a.nav__link(href="become-admin") Become an admin
           div.nav__account
             img.nav__user-avatar
-            a.nav__link(href="log-out") Log out
+            form(method="POST" action="logout" nav__inline)
+              button.nav__link.nav__link--btn(type="submit" role="link") Log out
     block content
