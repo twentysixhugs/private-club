@@ -46,7 +46,7 @@ app.use(
 
 passport.use(
   new LocalStrategy((username, password, done) => {
-    User.findOne({ username }).exec((err, user) => {
+    User.findOne({ username: username }).exec((err, user) => {
       if (err) {
         return done(err);
       }
@@ -63,7 +63,7 @@ passport.use(
         if (result) {
           return done(null, user);
         } else {
-          return done(null, user, { message: 'Incorrect password' });
+          return done(null, false, { message: 'Incorrect password' });
         }
       });
     });
