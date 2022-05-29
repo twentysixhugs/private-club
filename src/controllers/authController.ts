@@ -135,4 +135,15 @@ const loginPOST = (() => {
     }),
   ];
 })();
-export { signupGET, loginGET, signupPOST, loginPOST };
+
+const logoutPOST: ControllerFn = (req, res, next) => {
+  type LogoutFunction = (cb: (err: Error) => void) => void;
+
+  (req.logout as LogoutFunction)((err) => {
+    if (err) {
+      return next(err);
+    }
+    res.redirect('/');
+  });
+};
+export { signupGET, loginGET, signupPOST, loginPOST, logoutPOST };
