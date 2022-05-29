@@ -15,3 +15,5 @@ export type AsyncFunctionCallback = (
   err: Error | null | undefined,
   result: unknown,
 ) => void;
+
+export type ExpressUser = Express.User & { id: string };
