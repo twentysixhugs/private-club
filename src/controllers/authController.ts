@@ -2,14 +2,14 @@ import { ControllerFn } from 'src/types';
 import User from '../models/User';
 import * as passport from 'passport';
 import * as bcrypt from 'bcrypt';
-import { body, validationResult } from 'express-validator';
+import {
+  body,
+  validationResult,
+  ValidationChain,
+} from 'express-validator';
 
 const signupGET: ControllerFn = (req, res, next) => {
   res.render('auth-form', { authAction: 'Sign up', title: 'Sign up' });
-};
-
-const loginGET: ControllerFn = (req, res, next) => {
-  res.render('auth-form', { authAction: 'Log in', title: 'Log in' });
 };
 
 const signupPOST = (() => {
@@ -44,7 +44,7 @@ const signupPOST = (() => {
     }
   };
 
-  return [
+  const validationChain: ValidationChain[] = [
     body('username')
       .isAlphanumeric()
       .withMessage('Username must contain only letters and numbers')
@@ -70,6 +70,10 @@ const signupPOST = (() => {
     body('passwordConfirm')
       .custom((value, { req }) => value === req.body.password)
       .withMessage('Passwords do not match'),
+  ];
+
+  return [
+    ...validationChain,
     signupController,
     passport.authenticate('local', {
       failureRedirect: '/sign-up',
@@ -78,6 +82,14 @@ const signupPOST = (() => {
   ];
 })();
 
-const loginPOST: ControllerFn = (req, res, next) => {};
+const loginGET: ControllerFn = (req, res, next) => {
+  res.render('auth-form', { authAction: 'Log in', title: 'Log in' });
+};
 
+const loginPOST = (() => {
+  const loginController: ControllerFn = (req, res, next) => {};
+  const validationChain: ValidationChain[] = [];
+
+  return [...validationChain, loginController];
+})();
 export { signupGET, loginGET, signupPOST, loginPOST };
