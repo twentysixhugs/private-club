@@ -8,12 +8,12 @@ block content
           span.form__error=error.msg
     div.form__input-wrapper
       label.form__label(for="username") Username
-      input.form__input(type="text" name="username" id="username" value=`${errors ? errors.username ? errors.username.value : '': ''}`)
+      input.form__input(type="text" name="username" id="username" value=`${username ? username : ""}`)
     div.form__input-wrapper
       label.form__label(for="password") Password
-      input.form__input(type="password" name="password" id="password" value=`${errors ? errors.password ? errors.password.value : '' : ''}`)
+      input.form__input(type="password" name="password" id="password" value=`${password ? password : ""}`)
     if (authAction.toLowerCase() === 'sign up')
       div.form__input-wrapper
-        label.form__label(for="passwordConfirm") Confirm password
-        input.form__input(type="password" name="passwordConfirm" id="passwordConfirm" value=`${errors ? errors.passwordConfirm ? errors.passwordConfirm.value : '' : ''}`)
+        label.form__label(for="passwordConfirm" ) Confirm password
+        input.form__input(type="password" name="passwordConfirm" id="passwordConfirm" value=`${passwordConfirm? passwordConfirm : ""}`)
     button.form__submit(type="submit")= authAction
