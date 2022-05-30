@@ -7,6 +7,7 @@ import * as mongoose from 'mongoose';
 import * as passport from 'passport';
 import * as session from 'express-session';
 import * as bcrypt from 'bcrypt';
+import MongoStore = require('connect-mongo');
 import { Strategy as LocalStrategy } from 'passport-local';
 import 'dotenv/config';
 
@@ -39,8 +40,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(
   session({
     secret: process.env.SESSIONSECRET!,
+    store: MongoStore.create({ mongoUrl: process.env.DBCONNECTION! }),
     resave: false,
     saveUninitialized: false,
+    cookie: {
+      maxAge: 3600000 * 24 * 180,
+    },
   }),
 );
 
