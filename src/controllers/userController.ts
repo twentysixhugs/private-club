@@ -51,12 +51,16 @@ const membershipPOST = (() => {
         req.body.secretWord === process.env.SECRETWORDMEMBER
       ) {
         (req.user as HydratedDocument<IUser>).membership = 'member';
-        await (req.user as HydratedDocument<IUser>).save();
+        try {
+          await (req.user as HydratedDocument<IUser>).save();
 
-        return res.render('success', {
-          title: 'Membership',
-          membership: 'member',
-        });
+          return res.render('success', {
+            title: 'Membership',
+            membership: 'member',
+          });
+        } catch (err) {
+          return next(err);
+        }
       }
 
       if (
@@ -64,12 +68,16 @@ const membershipPOST = (() => {
         req.body.secretWord === process.env.SECRETWORDADMIN
       ) {
         (req.user as HydratedDocument<IUser>).membership = 'admin';
-        await (req.user as HydratedDocument<IUser>).save();
+        try {
+          await (req.user as HydratedDocument<IUser>).save();
 
-        return res.render('success', {
-          title: 'Membership',
-          membership: 'admin',
-        });
+          return res.render('success', {
+            title: 'Membership',
+            membership: 'admin',
+          });
+        } catch (err) {
+          return next(err);
+        }
       }
 
       return res.render('membership', {
