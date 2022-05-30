@@ -5,7 +5,7 @@ export interface ResponseError {
   message?: string;
 }
 
-export type ControllerFn = (
+export type MiddlewareFn = (
   req: express.Request,
   res: express.Response,
   next: express.NextFunction,

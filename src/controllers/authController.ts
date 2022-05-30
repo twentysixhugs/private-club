@@ -1,4 +1,4 @@
-import { ControllerFn, ExpressSession } from 'src/types';
+import { MiddlewareFn, ExpressSession } from 'src/types';
 import User from '../models/User';
 import * as passport from 'passport';
 import * as bcrypt from 'bcrypt';
@@ -8,7 +8,7 @@ import {
   ValidationChain,
 } from 'express-validator';
 
-const signupGET: ControllerFn = (req, res, next) => {
+const signupGET: MiddlewareFn = (req, res, next) => {
   if (!req.user) {
     return res.render('auth-form', {
       authAction: 'Sign up',
@@ -19,7 +19,7 @@ const signupGET: ControllerFn = (req, res, next) => {
 };
 
 const signupPOST = (() => {
-  const signupController: ControllerFn = async (req, res, next) => {
+  const signupController: MiddlewareFn = async (req, res, next) => {
     const errors = await validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -91,7 +91,7 @@ const signupPOST = (() => {
   ];
 })();
 
-const loginGET: ControllerFn = (req, res, next) => {
+const loginGET: MiddlewareFn = (req, res, next) => {
   if (!req.user) {
     return res.render('auth-form', {
       authAction: 'Log in',
@@ -104,7 +104,7 @@ const loginGET: ControllerFn = (req, res, next) => {
 };
 
 const loginPOST = (() => {
-  const loginController: ControllerFn = async (req, res, next) => {
+  const loginController: MiddlewareFn = async (req, res, next) => {
     (req.session as ExpressSession).messages = undefined;
 
     console.log((req.session as ExpressSession).messages);
@@ -155,7 +155,7 @@ const loginPOST = (() => {
   ];
 })();
 
-const logoutPOST: ControllerFn = (req, res, next) => {
+const logoutPOST: MiddlewareFn = (req, res, next) => {
   type LogoutFunction = (cb: (err: Error) => void) => void;
 
   (req.logout as LogoutFunction)((err) => {
