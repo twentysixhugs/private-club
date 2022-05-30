@@ -15,12 +15,14 @@ html
         else
           //- User is logged in
           div.nav__links
-            if (isMember)
+            if (user.membership === 'member' || user.membership === 'admin')
               a.link(href="new-message") Create a message
-            a.nav__link(href="become-member") Become a member
-            a.nav__link(href="become-admin") Become an admin
+            if (user.membership === 'none')
+              a.nav__link(href="/membership/member") Become member
+            if (user.membership !== 'admin')
+              a.nav__link(href="/membership/admin") Become admin
           div.nav__account
             img.nav__user-avatar
-            form(method="POST" action="logout" class="inline")
+            form(method="POST" action="/logout" class="inline")
               button.nav__link.nav__link--btn(type="submit" role="link") Log out
     block content

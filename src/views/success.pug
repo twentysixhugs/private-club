@@ -1,0 +1,5 @@
+extends layout
+
+block content
+  div.success
+    span.success__message= `You are now ${membership === 'member' ? 'a member' : 'an admin'}!`
