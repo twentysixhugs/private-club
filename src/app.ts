@@ -14,6 +14,7 @@ import 'dotenv/config';
 import indexRouter from './routes/index';
 import authRouter from './routes/auth';
 import membershipRouter from './routes/membership';
+import messageRouter from './routes/message';
 
 import { ResponseError, ExpressUser } from './types';
 import User from './models/User';
@@ -100,6 +101,7 @@ app.use((req, res, next) => {
 app.use('/', indexRouter);
 app.use('/', authRouter);
 app.use('/membership', membershipRouter);
+app.use('/message', messageRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

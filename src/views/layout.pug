@@ -16,7 +16,7 @@ html
           //- User is logged in
           div.nav__links
             if (user.membership === 'member' || user.membership === 'admin')
-              a.link(href="new-message") Create a message
+              a.link(href="/message/new") Create a message
             if (user.membership === 'none')
               a.nav__link(href="/membership/member") Become member
             if (user.membership !== 'admin')

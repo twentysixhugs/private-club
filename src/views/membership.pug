@@ -7,7 +7,7 @@ block content
         for error in errors
           span.form__error= error.msg
     if (incorrectWordMsg)
-        span.form__error= incorrectWordMsg
+      span.form__error= incorrectWordMsg
     div.form__input-wrapper
       label.form__label(for="secretWord") Enter the secret word
       input.form__input(type="text" name="secretWord" id="secretWord" value=`${secretWord ? secretWord : ""}`)

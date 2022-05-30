@@ -1,0 +1,12 @@
+extends layout 
+
+block content
+  form.form(action="" method="POST")
+    if (errors)
+      div.form__errors
+        for error in errors
+          span.form__error= error.msg
+    div.form__input-wrapper
+      label.form__label(for="message") Enter message text
+      input.form__input(type="text" name="message" id="message" value=`${message ? message : ""}` placeholder="I really love hugs")
+      button.form__submit(type="submit") Send
