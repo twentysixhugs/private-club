@@ -10,3 +10,10 @@ a {
 .inline {
   display: inline;
 }
+
+.message {
+  margin-top: 10px;
+  border: 1px solid lightgray;
+  border-radius: 4px;
+  padding: 12px;
+}
