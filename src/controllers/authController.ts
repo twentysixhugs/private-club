@@ -9,7 +9,13 @@ import {
 } from 'express-validator';
 
 const signupGET: ControllerFn = (req, res, next) => {
-  res.render('auth-form', { authAction: 'Sign up', title: 'Sign up' });
+  if (!req.user) {
+    return res.render('auth-form', {
+      authAction: 'Sign up',
+      title: 'Sign up',
+    });
+  }
+  return res.redirect('/');
 };
 
 const signupPOST = (() => {
@@ -86,11 +92,15 @@ const signupPOST = (() => {
 })();
 
 const loginGET: ControllerFn = (req, res, next) => {
-  res.render('auth-form', {
-    authAction: 'Log in',
-    title: 'Log in',
-    incorrectPasswordMsg: (req.session as ExpressSession).messages?.[0],
-  });
+  if (!req.user) {
+    return res.render('auth-form', {
+      authAction: 'Log in',
+      title: 'Log in',
+      incorrectPasswordMsg: (req.session as ExpressSession).messages?.[0],
+    });
+  }
+
+  return res.redirect('/');
 };
 
 const loginPOST = (() => {
