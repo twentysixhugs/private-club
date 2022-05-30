@@ -22,7 +22,9 @@ html
             if (user.membership !== 'admin')
               a.nav__link(href="/membership/admin") Become admin
           div.nav__account
-            img.nav__user-avatar
+            div.nav__account-wrapper
+              img.nav__user-avatar
+              span.nav__user-membership= user.membership
             form(method="POST" action="/logout" class="inline")
               button.nav__link.nav__link--btn(type="submit" role="link") Log out
     block content
