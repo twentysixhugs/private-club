@@ -105,11 +105,9 @@ const loginGET: MiddlewareFn = (req, res, next) => {
 
 const loginPOST = (() => {
   const loginController: MiddlewareFn = async (req, res, next) => {
-    (req.session as ExpressSession).messages = undefined;
-
-    console.log((req.session as ExpressSession).messages);
-
     const errors = await validationResult(req);
+
+    (req.session as ExpressSession).messages = undefined;
 
     if (!errors.isEmpty()) {
       return res.render('auth-form', {
@@ -131,7 +129,7 @@ const loginPOST = (() => {
       .isEmpty()
       .withMessage('Username is required')
       .custom(async (value) => {
-        let userCheck = User.findOne({
+        let userCheck = await User.findOne({
           usernameLowercased: value.toLowerCase(),
         });
 
