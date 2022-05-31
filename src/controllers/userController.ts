@@ -8,13 +8,22 @@ import User, { IUser } from '../models/User';
 import { MiddlewareFn } from '../types';
 
 const membershipGET: MiddlewareFn = (req, res, next) => {
-  const hasMembership =
-    req.params.membership.toLowerCase() === 'admin' ||
-    req.params.membership.toLowerCase() === 'member';
+  const isAdmin =
+    (req.user as HydratedDocument<IUser>).membership.toLowerCase() ===
+    'admin';
+  const isMember =
+    (req.user as HydratedDocument<IUser>).membership.toLowerCase() ===
+    'member';
 
-  console.log(req.user);
+  const isParamAdmin = req.params.membership.toLowerCase() === 'admin';
+  const isParamMember = req.params.membership.toLowerCase() === 'member';
 
-  if (hasMembership && req.user) {
+  const isValidParam = isParamAdmin || isParamMember;
+
+  if (
+    isValidParam &&
+    ((isMember && !isAdmin && isParamAdmin) || (!isMember && !isAdmin))
+  ) {
     return res.render('membership', {
       title: `Become ${req.params.membership.toLowerCase()}`,
     });
