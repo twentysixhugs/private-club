@@ -14,6 +14,15 @@ const messageFormGET: MiddlewareFn = (req, res, next) => {
     return res.redirect('/log-in');
   }
 
+  const isMember =
+    (req.user as HydratedDocument<IUser>).membership === 'member';
+  const isAdmin =
+    (req.user as HydratedDocument<IUser>).membership === 'admin';
+
+  if (!isMember && !isAdmin) {
+    return res.redirect('/membership/member');
+  }
+
   return res.render('message-form', { title: 'New message' });
 };
 
@@ -22,6 +31,15 @@ const messageCreatePOST = (() => {
     (req, res, next) => {
       if (!req.user) {
         return res.redirect('/log-in');
+      }
+
+      const isMember =
+        (req.user as HydratedDocument<IUser>).membership === 'member';
+      const isAdmin =
+        (req.user as HydratedDocument<IUser>).membership === 'admin';
+
+      if (!isMember && !isAdmin) {
+        return res.redirect('/membership/member');
       }
 
       return next();
