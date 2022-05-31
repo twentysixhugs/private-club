@@ -7,6 +7,8 @@ import {
   validationResult,
   ValidationChain,
 } from 'express-validator';
+import profanityFilter from '../config/profanity-filter';
+import { makeid } from '../helpers/util';
 
 const signupGET: MiddlewareFn = (req, res, next) => {
   if (!req.user) {
@@ -60,6 +62,17 @@ const signupPOST = (() => {
       .withMessage('Username is required')
       .isAlphanumeric()
       .withMessage('Username must contain only letters and numbers')
+      .bail()
+      .customSanitizer((value) => {
+        // Replace bad words from the username and add random characters
+        let cleaned = profanityFilter.clean(value);
+
+        if (cleaned !== value) {
+          cleaned += makeid(10);
+        }
+
+        return cleaned;
+      })
       .custom(async (value) => {
         let userCheck = await User.findOne({
           usernameLowercased: value.toLowerCase(),
@@ -80,6 +93,8 @@ const signupPOST = (() => {
       .custom((value, { req }) => value === req.body.password)
       .withMessage('Passwords do not match'),
     body('avatar')
+      .not()
+      .isEmpty()
       .custom(
         (value) => value >= 1 && value <= 5 && typeof value === 'string',
       )

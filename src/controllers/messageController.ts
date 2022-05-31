@@ -7,6 +7,7 @@ import {
   body,
 } from 'express-validator';
 import { HydratedDocument } from 'mongoose';
+import profanityFilter from '../config/profanity-filter';
 
 const messageGET: MiddlewareFn = (req, res, next) => {
   if (!req.user) {
@@ -59,7 +60,8 @@ const messagePOST = (() => {
       .isLength({ min: 1 })
       .withMessage(
         'You cannot send an empty message, or filled with spaces only. Why not try to write something? :)',
-      ),
+      )
+      .customSanitizer((value) => profanityFilter.clean(value)),
   ];
 
   return [...validationChain, ...middlewareChain];

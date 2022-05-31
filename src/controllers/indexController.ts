@@ -7,7 +7,11 @@ const indexGET: MiddlewareFn = async (req, res, next) => {
   try {
     const messages = await Message.find({
       introductory: false,
-      sitOnTop: false,
+      $or: [
+        { sitOnTop: false },
+        { sitOnTop: null },
+        { sitOnTop: undefined },
+      ],
     })
       .populate('user')
       .sort({ date: 'desc' });
