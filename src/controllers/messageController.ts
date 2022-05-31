@@ -9,7 +9,7 @@ import {
 import { HydratedDocument } from 'mongoose';
 import profanityFilter from '../config/profanity-filter';
 
-const messageGET: MiddlewareFn = (req, res, next) => {
+const messageFormGET: MiddlewareFn = (req, res, next) => {
   if (!req.user) {
     return res.redirect('/log-in');
   }
@@ -17,7 +17,7 @@ const messageGET: MiddlewareFn = (req, res, next) => {
   return res.render('message-form', { title: 'New message' });
 };
 
-const messagePOST = (() => {
+const messageCreatePOST = (() => {
   const middlewareChain: MiddlewareFn[] = [
     (req, res, next) => {
       if (!req.user) {
@@ -67,4 +67,4 @@ const messagePOST = (() => {
   return [...validationChain, ...middlewareChain];
 })();
 
-export { messageGET, messagePOST };
+export { messageFormGET, messageCreatePOST };
