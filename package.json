@@ -8,6 +8,7 @@
     "build": "rm -rf ./build/ && tsc && cp -r ./src/public/ ./build && cp -r ./src/views/ ./build"
   },
   "dependencies": {
+    "@twentysixhugs/profanity-filter": "^0.2.4",
     "@types/express-session": "^1.17.4",
     "bcrypt": "^5.0.1",
     "connect-mongo": "^4.6.0",
