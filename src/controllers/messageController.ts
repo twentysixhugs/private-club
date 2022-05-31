@@ -39,6 +39,7 @@ const messagePOST = (() => {
         text: req.body.message,
         user: (req.user as HydratedDocument<IUser>).id,
         date: new Date(),
+        introductory: false,
       });
 
       try {

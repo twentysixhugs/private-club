@@ -4,6 +4,8 @@ export interface IMessage {
   text: string;
   user: Types.ObjectId;
   date: Date;
+  introductory?: boolean;
+  sitOnTop: boolean;
 }
 
 const messageSchema = new Schema<IMessage>({
@@ -19,6 +21,14 @@ const messageSchema = new Schema<IMessage>({
   date: {
     type: Date,
     required: true,
+  },
+  introductory: {
+    type: Boolean,
+    required: false,
+  },
+  sitOnTop: {
+    type: Boolean,
+    required: false,
   },
 });
 

@@ -1,5 +1,22 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  ul.messages
+    each message in messages 
+      li.message
+        div.message__wrapper.message__wrapper--main
+          img.message__user-avatar(src=`${message.user.avatar}`)
+          //- All escaping is done in express-validator. The one here conflicts with it.
+          if (message.introductory || message.sitOnTop)
+            //- Show introductory message text anyway
+            p.message__text !{message.text}
+          else
+            //- Show other message texts depending on membership
+            p.message__text !{isMember ? message.text : 'Sign up and become a member to see this message!'}
+          if (isAdmin)
+            button.message__delete &times;
+        div.message__wrapper.message__wrapper--main
+          span(class=`message__user-name ${message.user.membership === 'admin' ? 'message__user-name--admin' : ''}`) !{message.user.username}
+          span.message__date= isMember ? message.dateFormatted : ''
+    else
+      span.messages__empty There are no messages yet. Be the first :)
