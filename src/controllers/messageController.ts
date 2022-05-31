@@ -67,4 +67,21 @@ const messageCreatePOST = (() => {
   return [...validationChain, ...middlewareChain];
 })();
 
-export { messageFormGET, messageCreatePOST };
+const messageDeletePOST: MiddlewareFn = async (req, res, next) => {
+  if (
+    req.user &&
+    (req.user as HydratedDocument<IUser>).membership === 'admin'
+  ) {
+    try {
+      await Message.findOneAndDelete({ _id: req.params.id });
+
+      return res.redirect('back');
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  return res.redirect('back');
+};
+
+export { messageFormGET, messageCreatePOST, messageDeletePOST };

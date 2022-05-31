@@ -14,7 +14,8 @@ block content
             //- Show other message texts depending on membership
             p.message__text !{isMember ? message.text : 'Sign up and become a member to see this message!'}
           if (isAdmin)
-            button.message__delete &times;
+            form.message__delete(method="POST" action=`/message/delete/${message.id}`)
+              button.message__delete(type="submit") &times;
         div.message__wrapper.message__wrapper--main
           span(class=`message__user-name ${message.user.membership === 'admin' ? 'message__user-name--admin' : ''}`) !{message.user.username}
           span.message__date= isMember ? message.dateFormatted : ''

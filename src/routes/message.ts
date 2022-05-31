@@ -6,4 +6,6 @@ const router = express.Router();
 router.get('/new', messageController.messageFormGET);
 router.post('/new', messageController.messageCreatePOST);
 
+router.post('/delete/:id', messageController.messageDeletePOST);
+
 export default router;
