@@ -40,7 +40,7 @@ const signupPOST = (() => {
         usernameLowercased: req.body.username.toLowerCase(),
         password: hashedPassword,
         membership: 'none',
-        avatar: '1',
+        avatar: req.body.avatar,
       });
 
       await user.save();
@@ -79,6 +79,11 @@ const signupPOST = (() => {
     body('passwordConfirm')
       .custom((value, { req }) => value === req.body.password)
       .withMessage('Passwords do not match'),
+    body('avatar')
+      .custom(
+        (value) => value >= 1 && value <= 5 && typeof value === 'string',
+      )
+      .withMessage('Are you a hacker?'),
   ];
 
   return [

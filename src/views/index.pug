@@ -5,7 +5,7 @@ block content
     each message in messages 
       li.message
         div.message__wrapper.message__wrapper--main
-          img.message__user-avatar(src=`${message.user.avatar}`)
+          img.message__user-avatar(src=`/images/avatar-${message.user.avatar}.png`)
           //- All escaping is done in express-validator. The one here conflicts with it.
           if (message.introductory || message.sitOnTop)
             //- Show introductory message text anyway
