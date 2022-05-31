@@ -68,14 +68,25 @@ const messageCreatePOST = (() => {
 })();
 
 const messageDeletePOST: MiddlewareFn = async (req, res, next) => {
-  if (
-    req.user &&
-    (req.user as HydratedDocument<IUser>).membership === 'admin'
-  ) {
+  if (req.user) {
     try {
-      await Message.findOneAndDelete({ _id: req.params.id });
+      const message = await Message.findById(req.params.id).populate(
+        'user',
+      );
 
-      return res.redirect('back');
+      if (!message) {
+        return res.redirect('back');
+      }
+
+      const isDeletingOwnMessage =
+        message.user.id === (req.user as HydratedDocument<IUser>).id;
+
+      const isAdmin =
+        (req.user as HydratedDocument<IUser>).membership === 'admin';
+
+      if (isDeletingOwnMessage || isAdmin) {
+        await Message.deleteOne({ _id: message.id });
+      }
     } catch (err) {
       return next(err);
     }
