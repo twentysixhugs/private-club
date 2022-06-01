@@ -4,20 +4,18 @@ import * as path from 'path';
 import * as cookieParser from 'cookie-parser';
 import * as logger from 'morgan';
 import * as mongoose from 'mongoose';
-import * as passport from 'passport';
 import * as session from 'express-session';
-import * as bcrypt from 'bcrypt';
 import MongoStore = require('connect-mongo');
-import { Strategy as LocalStrategy } from 'passport-local';
 import 'dotenv/config';
+
+import passport from './config/passport';
 
 import indexRouter from './routes/index';
 import authRouter from './routes/auth';
 import membershipRouter from './routes/membership';
 import messageRouter from './routes/message';
 
-import { ResponseError, ExpressUser } from './types';
-import User from './models/User';
+import { ResponseError } from './types';
 
 const app = express();
 
@@ -50,44 +48,6 @@ app.use(
     },
   }),
 );
-
-passport.use(
-  new LocalStrategy((username, password, done) => {
-    User.findOne({ usernameLowercased: username.toLowerCase() }).exec(
-      (err, user) => {
-        if (err) {
-          return done(err);
-        }
-
-        if (!user) {
-          return done(null, false);
-        }
-
-        bcrypt.compare(password, user.password, (err, result) => {
-          if (err) {
-            return done(err);
-          }
-
-          if (result) {
-            return done(null, user);
-          } else {
-            return done(null, false, { message: 'Incorrect password' });
-          }
-        });
-      },
-    );
-  }),
-);
-
-passport.serializeUser((user, done) => {
-  done(null, (user as ExpressUser).id);
-});
-
-passport.deserializeUser((id, done) => {
-  User.findById(id as string).exec((err, user) => {
-    done(err, user);
-  });
-});
 
 app.use(passport.initialize());
 app.use(passport.session());
