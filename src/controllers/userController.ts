@@ -91,7 +91,11 @@ const membershipPOST = (() => {
 
       return res.render('membership', {
         title: `Become ${req.params.membership.toLowerCase()}`,
-        incorrectWordMsg: "That's not right",
+        incorrectWordMsg: `${
+          req.params.membership === 'member'
+            ? "That's not right. Try to log out and see introductory that message again :)"
+            : "Well, that's not right"
+        }`,
       });
     },
   ];
