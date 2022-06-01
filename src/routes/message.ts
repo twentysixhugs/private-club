@@ -8,4 +8,7 @@ router.post('/new', messageController.messageCreatePOST);
 
 router.post('/delete/:id', messageController.messageDeletePOST);
 
+router.get('/edit/:id', messageController.messageEditGET);
+router.post('/edit/:id', messageController.messageEditPOST);
+
 export default router;

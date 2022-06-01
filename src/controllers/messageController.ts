@@ -9,17 +9,19 @@ import {
 import { HydratedDocument } from 'mongoose';
 import profanityFilter from '../config/profanity-filter';
 
+function hasCRUDPermission(user: HydratedDocument<IUser>) {
+  const isMember = user.membership === 'member';
+  const isAdmin = user.membership === 'admin';
+
+  return isMember || isAdmin;
+}
+
 const messageFormGET: MiddlewareFn = (req, res, next) => {
   if (!req.user) {
     return res.redirect('/log-in');
   }
 
-  const isMember =
-    (req.user as HydratedDocument<IUser>).membership === 'member';
-  const isAdmin =
-    (req.user as HydratedDocument<IUser>).membership === 'admin';
-
-  if (!isMember && !isAdmin) {
+  if (!hasCRUDPermission(req.user as HydratedDocument<IUser>)) {
     return res.redirect('/membership/member');
   }
 
@@ -33,12 +35,7 @@ const messageCreatePOST = (() => {
         return res.redirect('/log-in');
       }
 
-      const isMember =
-        (req.user as HydratedDocument<IUser>).membership === 'member';
-      const isAdmin =
-        (req.user as HydratedDocument<IUser>).membership === 'admin';
-
-      if (!isMember && !isAdmin) {
+      if (!hasCRUDPermission(req.user as HydratedDocument<IUser>)) {
         return res.redirect('/membership/member');
       }
 
@@ -113,4 +110,104 @@ const messageDeletePOST: MiddlewareFn = async (req, res, next) => {
   return res.redirect('back');
 };
 
-export { messageFormGET, messageCreatePOST, messageDeletePOST };
+const messageEditGET: MiddlewareFn = async (req, res, next) => {
+  if (!req.user) {
+    return res.redirect('/log-in');
+  }
+
+  if (!hasCRUDPermission(req.user as HydratedDocument<IUser>)) {
+    return res.redirect('/membership/member');
+  }
+
+  const message = await Message.findOne({ _id: req.params.id }).populate(
+    'user',
+  );
+
+  if (!message) {
+    return res.redirect('/');
+  }
+
+  if (
+    (req.user as HydratedDocument<IUser>).membership !== 'admin' &&
+    message?.user.id !== (req.user as HydratedDocument<IUser>).id
+  ) {
+    return res.redirect('/membership/admin');
+  }
+
+  return res.render('message-form', {
+    title: 'Edit message',
+    message: message?.text,
+  });
+};
+
+const messageEditPOST = (() => {
+  const middlewareChain: MiddlewareFn[] = [
+    (req, res, next) => {
+      if (!req.user) {
+        return res.redirect('/log-in');
+      }
+
+      if (!hasCRUDPermission(req.user as HydratedDocument<IUser>)) {
+        return res.redirect('/membership/member');
+      }
+
+      return next();
+    },
+    async (req, res, next) => {
+      const errors = validationResult(req);
+
+      if (!errors.isEmpty()) {
+        return res.render('message-form', {
+          title: 'New message',
+          errors: errors.mapped(),
+        });
+      }
+
+      try {
+        const message = await Message.findOne({
+          _id: req.params.id,
+        }).populate('user');
+
+        if (
+          (req.user as HydratedDocument<IUser>).membership !== 'admin' &&
+          message?.user.id !== (req.user as HydratedDocument<IUser>).id
+        ) {
+          return res.redirect('/membership/admin');
+        }
+
+        if (!message) {
+          return res.redirect('/');
+        }
+
+        message.text = req.body.message;
+
+        await message.save();
+
+        return res.redirect('/');
+      } catch (err) {
+        return next(err);
+      }
+    },
+  ];
+
+  const validationChain: ValidationChain[] = [
+    body('message')
+      .trim()
+      .escape()
+      .isLength({ min: 1 })
+      .withMessage(
+        'You cannot send an empty message, or filled with spaces only. Why not try to write something? :)',
+      )
+      .customSanitizer((value) => profanityFilter.clean(value)),
+  ];
+
+  return [...validationChain, ...middlewareChain];
+})();
+
+export {
+  messageFormGET,
+  messageCreatePOST,
+  messageDeletePOST,
+  messageEditGET,
+  messageEditPOST,
+};

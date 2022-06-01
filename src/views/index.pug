@@ -19,9 +19,15 @@ block content
         div.message__wrapper.message__wrapper--main
           if (message.introductory || message.sitOnTop)
             span(class=`message__user-name ${message.user.membership === 'admin' ? 'message__user-name--admin' : ''}`) !{message.user.username}
+            if (user && message.user.id === user.id)
+              form(method="GET" action=`/message/edit/${message.id}`)
+                button.message__edit(type="submit") Edit
             span.message__date= ''
           else
             span(class=`message__user-name ${message.user.membership === 'admin' ? 'message__user-name--admin' : ''}`) !{isMember ? message.user.username : 'Anonymous'}
+            if (user && message.user.id === user.id)
+              form(method="GET" action=`/message/edit/${message.id}`)
+                button.message__edit(type="submit") Edit
             span.message__date= isMember ? message.dateFormatted : 'Date hidden'
     else
       span.messages__empty There are no messages yet. Be the first :)
