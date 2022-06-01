@@ -12,7 +12,7 @@ import { HttpError } from 'http-errors';
 /**
  * Set up debug
  */
-const debug = Debug('inventory-app:server');
+const debug = Debug('private-club:server');
 
 /**
  * Get port from environment and store in Express.
