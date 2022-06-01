@@ -7,6 +7,9 @@
     "devstart": "nodemon --config \"./util/nodemon.json\"/",
     "build": "rm -rf ./build/ && tsc && cp -r ./src/public/ ./build && cp -r ./src/views/ ./build"
   },
+  "engines": {
+    "node": "16.15.0"
+  },
   "dependencies": {
     "@twentysixhugs/profanity-filter": "^0.2.4",
     "@types/express-session": "^1.17.4",
