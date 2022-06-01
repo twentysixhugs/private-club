@@ -5,7 +5,8 @@ block content
     each message in messages 
       li(class=`message${user && message.user.id === user.id ? ' message--own' : ''}`)
         div.message__wrapper.message__wrapper--main
-          img.message__user-avatar(src=`/images/avatar-${message.user.avatar}.png`)
+          div.avatar-wrapper
+            img.message__user-avatar(src=`/images/avatar-${message.user.avatar}.png`)
           //- All escaping is done in express-validator. The one here conflicts with it.
           if (message.introductory || message.sitOnTop)
             //- Show introductory message text anyway
@@ -15,19 +16,21 @@ block content
             p.message__text !{isMember ? message.text : 'Sign up and become a member to see this message!'}
           if (isAdmin || user && message.user.id === user.id)
             form.message__delete(method="POST" action=`/message/delete/${message.id}`)
-              button.message__delete(type="submit") &times;
-        div.message__wrapper.message__wrapper--main
+              button(type="submit") &times;
+        div.message__wrapper.message__wrapper--message-info
           if (message.introductory || message.sitOnTop)
+            if (user && message.user.id === user.id || isAdmin)
+              form.message__edit(method="GET" action=`/message/edit/${message.id}`)
+                button(type="submit") Edit
             span(class=`message__user-name ${message.user.membership === 'admin' ? 'message__user-name--admin' : ''}`) !{message.user.username}
-            if (user && message.user.id === user.id || isAdmin)
-              form(method="GET" action=`/message/edit/${message.id}`)
-                button.message__edit(type="submit") Edit
-            span.message__date= ''
           else
-            span(class=`message__user-name ${message.user.membership === 'admin' ? 'message__user-name--admin' : ''}`) !{isMember ? message.user.username : 'Anonymous'}
             if (user && message.user.id === user.id || isAdmin)
-              form(method="GET" action=`/message/edit/${message.id}`)
-                button.message__edit(type="submit") Edit
+              form.message__edit(method="GET" action=`/message/edit/${message.id}`)
+                button(type="submit") Edit
             span.message__date= isMember ? message.dateFormatted : 'Date hidden'
+            if (user && isMember)
+              span(class=`message__user-name ${message.user.membership === 'admin' ? 'message__user-name--admin' : ''}`) !{message.user.username}
+            else
+              span(class='message__user-name') Anonymous
     else
       span.messages__empty There are no messages yet. Be the first :)
