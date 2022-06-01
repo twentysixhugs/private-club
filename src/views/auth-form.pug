@@ -18,20 +18,21 @@ block content
       div.form__input-wrapper
         label.form__label(for="passwordConfirm" ) Confirm password
         input.form__input(type="password" name="passwordConfirm" id="passwordConfirm" value=`${passwordConfirm? passwordConfirm : ""}`)
-        div.form__avatars
-          div.form__avatar
-            img(id="avatar-1" src="/images/avatar-1.png")
-            input(type="radio" name="avatar" value="1" checked)
-          div.form__avatar
-            img(id="avatar-2" src="/images/avatar-2.png")
-            input(type="radio" name="avatar" value="2")
-          div.form__avatar
-            img(id="avatar-3" src="/images/avatar-3.png")
-            input(type="radio" name="avatar" value="3")
-          div.form__avatar
-            img(id="avatar-4" src="/images/avatar-4.png")
-            input(type="radio" name="avatar" value="4")
-          div.form__avatar
-            img(id="avatar-5" src="/images/avatar-5.png")
-            input(type="radio" name="avatar" value="5")
+      h3.form__avatars-heading Choose your avatar
+      div.form__avatars
+        div.form__avatar
+          input(type="radio" name="avatar" value="1" checked)
+          img(id="avatar-1" src="/images/avatar-1.png")
+        div.form__avatar
+          input(type="radio" name="avatar" value="2")
+          img(id="avatar-2" src="/images/avatar-2.png")
+        div.form__avatar
+          input(type="radio" name="avatar" value="3")
+          img(id="avatar-3" src="/images/avatar-3.png")
+        div.form__avatar
+          input(type="radio" name="avatar" value="4")
+          img(id="avatar-4" src="/images/avatar-4.png")
+        div.form__avatar
+          input(type="radio" name="avatar" value="5")
+          img(id="avatar-5" src="/images/avatar-5.png")
     button.form__submit(type="submit")= authAction
